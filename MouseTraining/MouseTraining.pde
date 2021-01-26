@@ -18,8 +18,8 @@ String date;
 void setup()
 {
   date = String.format("%d-%d-%d", month(), day(), year());
-  startTime = String.format("%d:%d:%d", hour(), minute(), second()); 
-  file = createWriter(String.format("game_%s_%s.json", date, startTime));
+  startTime = String.format("%d:%d:%d", hour(), minute(), second());
+  file = createWriter(String.format("game_%s_%s.json", date, String.format("%d-%d-%d", hour(), minute(), second())));
   fullScreen();
   frameRate(30);
   textSize(48);
@@ -35,7 +35,7 @@ void keyPressed()
   if(key == ' ')
   {
     file.println(String.format(
-      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\"\n\t}\n}", 
+      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":\n\t{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\"\n\t}\n}", 
       score, left, right, middle, date, startTime, String.format("%d:%d:%d", hour(), minute(), second())));
     file.flush();
     file.close();
