@@ -1,6 +1,7 @@
 import java.io.*;
 
 ArrayList<Blob> clickableThings;
+PrintWriter file;
 
 int score = 0;
 color red = color(255, 0, 0);
@@ -11,8 +12,14 @@ int left = 0;
 int right = 0;
 int middle = 0;
 
+String startTime;
+String date;
+
 void setup()
 {
+  date = String.format("%d-%d-%d", month(), day(), year());
+  startTime = String.format("%d:%d:%d", hour(), minute(), second()); 
+  file = createWriter(String.format("game_%s_%s.json", date, startTime));
   fullScreen();
   frameRate(30);
   textSize(48);
@@ -23,12 +30,17 @@ void setup()
   }
 }
 
-void stop()
+void keyPressed()
 {
-    PrintWriter file = createWriter("game.json");
-    file.println(String.format("{ \"score\":%d, \"left\":%d, \"right\":%d, \"middle\":%d }", score, left, right, middle));
+  if(key == ' ')
+  {
+    file.println(String.format(
+      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\"\n\t}\n}", 
+      score, left, right, middle, date, startTime, String.format("%d:%d:%d", hour(), minute(), second())));
     file.flush();
     file.close();
+    exit();
+  }
 }
 
 Blob generateRandomBlob()
@@ -70,6 +82,8 @@ void draw()
   text(String.format("Left Click %d", left), 100, 200);
   fill(blue);
   text(String.format("Middle Click %d", middle), 100, 250);
+  fill(0);
+  text("Space Bar to quit.", 100, 300);
   
   if(clickableThings.size() < 25 && frameCount % 30 == 0 && random(5) > 2)
   {
