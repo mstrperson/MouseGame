@@ -21,65 +21,7 @@ long gameStartSeconds;
 
 boolean quit = false;
 
-void setup()
-{
-  date = String.format("%d-%d-%d", month(), day(), year());
-  startTime = String.format("%d:%d:%d", hour(), minute(), second());
-  gameStartSeconds = second() + 60 * (minute() + 60 * hour());
-  file = createWriter(String.format("game_%s_%s.json", date, String.format("%d-%d-%d", hour(), minute(), second())));
-  fullScreen();
-  frameRate(30);
-  clickableThings = new ArrayList<Blob>();
-  for(int i = 0; i < 5; i++)
-  {
-    clickableThings.add(generateRandomBlob());
-  }
-}
-
-String getPlayedTime()
-{
-  long gameTime = second() + 60 * (minute() + 60 * hour());
-  gameTime -= gameStartSeconds;
-  
-  int seconds = (int)(gameTime % 60);
-  gameTime /= 60;
-  int minutes = (int)(gameTime % 60);
-  gameTime /= 60;
-  int hours = (int)gameTime;
-  
-  return String.format("%d:%d:%d", hours, minutes, seconds);
-}
-
-void keyPressed()
-{
-  if(key == ' ')
-  {
-    file.println(String.format(
-      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":\n\t{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\",\n\t\t\"played_time\":\"%s\"\n\t}\n}", 
-      score, left, right, middle, date, startTime, String.format("%d:%d:%d", hour(), minute(), second()), getPlayedTime()));
-    file.flush();
-    file.close();
-    
-    textSize(72);
-    fill(green);
-    text("Your Score has been saved!", width/4, height/2 - 36);
-    quit = true;
-  }
-  else if(keyCode == UP)
-  {
-    mult += 0.5;
-    frameRate(30*mult);
-  }
-  else if(keyCode == DOWN)
-  {
-    if(mult > 1)
-    {  
-      mult -= 0.5;
-      frameRate(30*mult);
-    }
-  }
-}
-
+// Create a Randomly Generated Blob to click on!
 Blob generateRandomBlob()
 {
   Shape s;
@@ -107,6 +49,81 @@ Blob generateRandomBlob()
     }
     
     return b;
+}
+
+// This is what happens when you click on a "RED" Blob
+public void rightClick_action(Blob sender)
+{
+  if(mouseButton == RIGHT)
+  {
+    score += sender.getScore() * mult + 5;
+    sender.active = false;
+    right++;
+  }
+  else
+  {
+    score -= 10;
+  }
+}
+
+// This is what happens when you click on a "GREEN" Blob
+public void leftClick_action(Blob sender)
+{
+  if(mouseButton == LEFT)
+  {
+    score += sender.getScore() * (mult/2) + 5;
+    sender.active = false;
+    left++;
+  }
+  else
+  {
+    score -= 10;
+  }
+}
+
+// This is what happens when you click on a "BLUE" Blob
+public void middleClick_action(Blob sender)
+{
+  if(mouseButton == CENTER)
+  {
+    score += sender.getScore() * (1.5 * mult) + 5;
+    sender.active = false;
+    middle++;
+  }
+  else
+  {
+    score -= 10;
+  }
+}
+
+// Get the current played time as "HH:MM:SS" format.
+String getPlayedTime()
+{
+  long gameTime = second() + 60 * (minute() + 60 * hour());
+  gameTime -= gameStartSeconds;
+  
+  int seconds = (int)(gameTime % 60);
+  gameTime /= 60;
+  int minutes = (int)(gameTime % 60);
+  gameTime /= 60;
+  int hours = (int)gameTime;
+  
+  return String.format("%d:%d:%d", hours, minutes, seconds);
+}
+
+void setup()
+{
+  date = String.format("%d-%d-%d", month(), day(), year());
+  startTime = String.format("%d:%d:%d", hour(), minute(), second());
+  gameStartSeconds = second() + 60 * (minute() + 60 * hour());
+  file = createWriter(String.format("game_%s_%s.json", date, String.format("%d-%d-%d", hour(), minute(), second())));
+  fullScreen();
+  frameRate(30);
+  clickableThings = new ArrayList<Blob>();
+  for(int i = 0; i < 5; i++)
+  {
+    clickableThings.add(generateRandomBlob());
+  }
 }
 
 void draw()
@@ -166,44 +183,32 @@ void mousePressed()
   score -= 5;
 }
 
-public void rightClick_action(Blob sender)
+void keyPressed()
 {
-  if(mouseButton == RIGHT)
+  if(key == ' ')
   {
-    score += sender.getScore() * mult + 5;
-    sender.active = false;
-    right++;
+    file.println(String.format(
+      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":\n\t{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\",\n\t\t\"played_time\":\"%s\"\n\t}\n}", 
+      score, left, right, middle, date, startTime, String.format("%d:%d:%d", hour(), minute(), second()), getPlayedTime()));
+    file.flush();
+    file.close();
+    
+    textSize(72);
+    fill(green);
+    text("Your Score has been saved!", width/4, height/2 - 36);
+    quit = true;
   }
-  else
+  else if(keyCode == UP)
   {
-    score -= 10;
+    mult += 0.5;
+    frameRate(30*mult);
   }
-}
-
-public void leftClick_action(Blob sender)
-{
-  if(mouseButton == LEFT)
+  else if(keyCode == DOWN)
   {
-    score += sender.getScore() * (mult/2) + 5;
-    sender.active = false;
-    left++;
-  }
-  else
-  {
-    score -= 10;
-  }
-}
-
-public void middleClick_action(Blob sender)
-{
-  if(mouseButton == CENTER)
-  {
-    score += sender.getScore() * (1.5 * mult) + 5;
-    sender.active = false;
-    middle++;
-  }
-  else
-  {
-    score -= 10;
+    if(mult > 1)
+    {  
+      mult -= 0.5;
+      frameRate(30*mult);
+    }
   }
 }
