@@ -17,14 +17,18 @@ int middle = 0;
 String startTime;
 String date;
 
+long gameStartSeconds;
+
+boolean quit = false;
+
 void setup()
 {
   date = String.format("%d-%d-%d", month(), day(), year());
   startTime = String.format("%d:%d:%d", hour(), minute(), second());
+  gameStartSeconds = second() + 60 * (minute() + 60 * hour());
   file = createWriter(String.format("game_%s_%s.json", date, String.format("%d-%d-%d", hour(), minute(), second())));
   fullScreen();
   frameRate(30);
-  textSize(48);
   clickableThings = new ArrayList<Blob>();
   for(int i = 0; i < 5; i++)
   {
@@ -32,16 +36,34 @@ void setup()
   }
 }
 
+String getPlayedTime()
+{
+  long gameTime = second() + 60 * (minute() + 60 * hour());
+  gameTime -= gameStartSeconds;
+  
+  int seconds = (int)(gameTime % 60);
+  gameTime /= 60;
+  int minutes = (int)(gameTime % 60);
+  gameTime /= 60;
+  int hours = (int)gameTime;
+  
+  return String.format("%d:%d:%d", hours, minutes, seconds);
+}
+
 void keyPressed()
 {
   if(key == ' ')
   {
     file.println(String.format(
-      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":\n\t{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\"\n\t}\n}", 
-      score, left, right, middle, date, startTime, String.format("%d:%d:%d", hour(), minute(), second())));
+      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":\n\t{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\",\n\t\t\"played_time\":\"%s\"\n\t}\n}", 
+      score, left, right, middle, date, startTime, String.format("%d:%d:%d", hour(), minute(), second()), getPlayedTime()));
     file.flush();
     file.close();
-    exit();
+    
+    textSize(72);
+    fill(green);
+    text("Your Score has been saved!", width/4, height/2 - 36);
+    quit = true;
   }
   else if(keyCode == UP)
   {
@@ -89,8 +111,10 @@ Blob generateRandomBlob()
 
 void draw()
 {
+  
   background(255);
   
+  textSize(48);
   fill(red);
   text(String.format("Right Click %d", right), 100, 150);
   fill(green);
@@ -99,6 +123,12 @@ void draw()
   text(String.format("Middle Click %d", middle), 100, 250);
   fill(0);
   text("Space Bar to quit.", 100, 300);
+  
+  text(getPlayedTime(), width - 300, 150);
+  
+  textSize(24);
+  text("UP Arrow to increase difficulty", 100, height - 300);
+  text("DOWN Arrow to decrease difficulty", 100, height - 265);
   
   if(clickableThings.size() < 25 && frameCount % 30 == 0 && random(5) > 2)
   {
@@ -118,6 +148,12 @@ void draw()
   
   fill(0);
   text(score, 100, 100);
+  
+  if(quit)
+  {
+    delay(5000);
+    exit();
+  }
 }
 
 void mousePressed()
