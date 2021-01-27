@@ -23,6 +23,14 @@ public class Blob extends Sprite
     this.active = true;
   }
   
+  // score is dependent on both speed and size.
+  // smaller target and faster speed = more points!
+  public float getScore()
+  {
+    float spd = sqrt(dx * dx + dy * dy);
+    return 50*(1 + s/width) + 50 * (1 + spd/5); 
+  }
+  
   public boolean isActive()
   {
     return active;
@@ -35,7 +43,7 @@ public class Blob extends Sprite
     fill(c);
     switch(shape)
     {
-      case Circle:     ellipse(x, y, s*2, s*2); break;
+      case Circle:     ellipse(x, y, s, s); break;
       case Triangle:   triangle(x, y, x+s, y, x+(s/2), y-((sqrt(3)/2)*s)); break;
       case Square:     rect(x, y, s, s); break;
     }

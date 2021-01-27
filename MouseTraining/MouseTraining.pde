@@ -1,9 +1,11 @@
 import java.io.*;
 
+
 ArrayList<Blob> clickableThings;
 PrintWriter file;
 
 int score = 0;
+float mult = 1;
 color red = color(255, 0, 0);
 color green = color(0, 255, 0);
 color blue = color(0, 0, 255);
@@ -41,6 +43,19 @@ void keyPressed()
     file.close();
     exit();
   }
+  else if(keyCode == UP)
+  {
+    mult += 0.5;
+    frameRate(30*mult);
+  }
+  else if(keyCode == DOWN)
+  {
+    if(mult > 1)
+    {  
+      mult -= 0.5;
+      frameRate(30*mult);
+    }
+  }
 }
 
 Blob generateRandomBlob()
@@ -61,7 +76,7 @@ Blob generateRandomBlob()
       default: c = blue; break;
     }
     
-    Blob b = new Blob(width/50+random(20), s, c);
+    Blob b = new Blob(width/50+random(50), s, c);
     switch(c)
     {
       case #FF0000: b.onClick.bind(this, "rightClick_action"); break;
@@ -119,7 +134,7 @@ public void rightClick_action(Blob sender)
 {
   if(mouseButton == RIGHT)
   {
-    score += 105;
+    score += sender.getScore() * mult + 5;
     sender.active = false;
     right++;
   }
@@ -133,7 +148,7 @@ public void leftClick_action(Blob sender)
 {
   if(mouseButton == LEFT)
   {
-    score += 105;
+    score += sender.getScore() * (mult/2) + 5;
     sender.active = false;
     left++;
   }
@@ -147,7 +162,7 @@ public void middleClick_action(Blob sender)
 {
   if(mouseButton == CENTER)
   {
-    score += 105;
+    score += sender.getScore() * (1.5 * mult) + 5;
     sender.active = false;
     middle++;
   }
