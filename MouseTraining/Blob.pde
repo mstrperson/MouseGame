@@ -54,7 +54,7 @@ public class Blob extends Sprite
     switch(shape)
     {
       case Circle: 
-                      if(this.distanceTo(mouseX, mouseY) <= this.s) { onClick.trigger(this); }
+                      if(this.distanceTo(mouseX, mouseY) <= this.s/2) { onClick.trigger(this); }
                       break;
       case Triangle: 
                       if(mouseY <= y && 
