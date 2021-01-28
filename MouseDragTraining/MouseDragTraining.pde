@@ -1,3 +1,9 @@
+import processing.sound.*;
+
+SoundFile hit;
+SoundFile miss;
+SoundFile grab;
+
 ArrayList<Blob> clickableThings;
 
 Blob activeDrag;
@@ -67,6 +73,7 @@ public void leftDrag_action(Blob sender)
   if(mouseButton == LEFT)
   {
     activeDrag = sender;
+    grab.play();
   }
 }
 
@@ -75,6 +82,7 @@ public void rightDrag_action(Blob sender)
   if(mouseButton == RIGHT)
   {
     activeDrag = sender;
+    grab.play();
   }
 }
 
@@ -83,6 +91,7 @@ public void middleDrag_action(Blob sender)
   if(mouseButton == CENTER)
   {
     activeDrag = sender;
+    grab.play();
   }
 }
 
@@ -93,10 +102,12 @@ public void rightDrop_action(Blob sender)
     score += sender.getScore() * mult + 5;
     sender.active = false;
     right++;
+    hit.play();
   }
   else
   {
     score -= 10;
+    miss.play();
   }
 }
 
@@ -108,9 +119,11 @@ public void leftDrop_action(Blob sender)
     score += sender.getScore() * (mult/2) + 5;
     sender.active = false;
     left++;
+    hit.play();
   }
   else
   {
+    miss.play();
     score -= 10;
   }
 }
@@ -123,10 +136,12 @@ public void middleDrop_action(Blob sender)
     score += sender.getScore() * (1.5 * mult) + 5;
     sender.active = false;
     middle++;
+    hit.play();
   }
   else
   {
     score -= 10;
+    miss.play();
   }
 }
 
@@ -168,6 +183,9 @@ void mouseReleased()
 
 void setup()
 {
+  hit = new SoundFile(this, "hit.wav");
+  miss = new SoundFile(this, "miss.wav");
+  grab = new SoundFile(this, "grab.wav");
   goal = new Blob(width/15, Shape.Circle, color(#FFCC11));
   date = String.format("%d-%d-%d", month(), day(), year());
   startTime = String.format("%d:%d:%d", hour(), minute(), second());

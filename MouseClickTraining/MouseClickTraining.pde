@@ -1,3 +1,8 @@
+import processing.sound.*;
+
+SoundFile hit;
+SoundFile miss;
+
 ArrayList<Blob> clickableThings;
 
 PrintWriter file;
@@ -57,10 +62,12 @@ public void rightClick_action(Blob sender)
     score += sender.getScore() * mult + 5;
     sender.active = false;
     right++;
+    hit.play();
   }
   else
   {
     score -= 10;
+    miss.play();
   }
 }
 
@@ -72,10 +79,12 @@ public void leftClick_action(Blob sender)
     score += sender.getScore() * (mult/2) + 5;
     sender.active = false;
     left++;
+    hit.play();
   }
   else
   {
     score -= 10;
+    miss.play();
   }
 }
 
@@ -87,10 +96,12 @@ public void middleClick_action(Blob sender)
     score += sender.getScore() * (1.5 * mult) + 5;
     sender.active = false;
     middle++;
+    hit.play();
   }
   else
   {
     score -= 10;
+    miss.play();
   }
 }
 
@@ -111,6 +122,8 @@ String getPlayedTime()
 
 void setup()
 {
+  hit = new SoundFile(this, "hit.wav");
+  miss = new SoundFile(this, "miss.wav");
   date = String.format("%d-%d-%d", month(), day(), year());
   startTime = String.format("%d:%d:%d", hour(), minute(), second());
   gameStartSeconds = second() + 60 * (minute() + 60 * hour());
