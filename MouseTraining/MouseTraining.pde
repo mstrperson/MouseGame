@@ -188,7 +188,7 @@ void keyPressed()
   if(key == ' ')
   {
     file.println(String.format(
-      "{\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":\n\t{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\",\n\t\t\"played_time\":\"%s\"\n\t}\n}", 
+      "{\n\t\"game\":\"clicking\",\n\t\"score\":%d,\n\t\"left\":%d,\n\t\"right\":%d,\n\t\"middle\":%d,\n\t\"game_time\":\n\t{\n\t\t\"date\":\"%s\",\n\t\t\"start_time\":\"%s\",\n\t\t\"end_time\":\"%s\",\n\t\t\"played_time\":\"%s\"\n\t}\n}", 
       score, left, right, middle, date, startTime, String.format("%d:%d:%d", hour(), minute(), second()), getPlayedTime()));
     file.flush();
     file.close();
