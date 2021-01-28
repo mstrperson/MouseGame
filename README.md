@@ -11,5 +11,5 @@ The UP and DOWN arrow keys on the keyboard adjust the game difficulty (how fast 
 Hit the SPACE bar to end the game and Save your Score to a json file in the Game directory. **I might ask you to submit these results for homework!**
 
 ## Credits
-The `Event` class is not my work:  It belongs to [Stephcraft](https://github.com/Stephcraft/Project-16x16/blob/master/sketch/EventLibrary/EventLibrary.pde)
+The `Event` class is not my work:  It belongs to [Stephcraft](https://github.com/Stephcraft/Project-16x16/blob/master/sketch/EventLibrary/EventLibrary.pde)  
 Sound files are in the public domain, acquired from freesound.org
