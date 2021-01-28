@@ -166,8 +166,13 @@ void mousePressed()
   {
     for(Blob b : clickableThings)
     {
-      b.drag();
-      if(activeDrag != null) break;
+      if((b.c == red && mouseButton == RIGHT) ||
+         (b.c == green && mouseButton == LEFT) ||
+         (b.c == blue && mouseButton == CENTER))
+      {
+        b.drag();
+        if(activeDrag != null) break;
+      }
     }
   }
 }
