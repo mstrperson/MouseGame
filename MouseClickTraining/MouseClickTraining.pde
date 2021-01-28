@@ -1,7 +1,5 @@
-import java.io.*;
-
-
 ArrayList<Blob> clickableThings;
+
 PrintWriter file;
 
 int score = 0;
